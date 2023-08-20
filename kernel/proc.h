@@ -1,3 +1,5 @@
+#define VMASIZE 16 
+#define NVMA 16
 // Saved registers for kernel context switches.
 struct context {
   uint64 ra;
@@ -28,6 +30,16 @@ struct cpu {
 
 extern struct cpu cpus[NCPU];
 
+
+struct vma
+{
+  int valid;                   // if the mapped virtual memory address is valid
+  uint64 addr;                 // the address of the vma
+  int length;                  // length of mapped memory
+  int prot;                    // access guard of memory
+  int flags;                   // shared or provate
+  struct file *mapfile;
+};
 // per-process data for the trap handling code in trampoline.S.
 // sits in a page by itself just under the trampoline page in the
 // user page table. not specially mapped in the kernel page table.
@@ -105,4 +117,7 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+
+
+  struct vma vmas[VMASIZE];       // process virtual memory area
 };
