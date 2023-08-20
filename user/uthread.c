@@ -10,6 +10,7 @@
 #define STACK_SIZE  8192
 #define MAX_THREAD  4
 
+// Saved registers for user context switches.
 struct context {
   uint64 ra;
   uint64 sp;
@@ -32,7 +33,7 @@ struct context {
 struct thread {
   char       stack[STACK_SIZE]; /* the thread's stack */
   int        state;             /* FREE, RUNNING, RUNNABLE */
-  struct context contex;//context of thread
+  struct     context contex;           /* the context of thread */
 };
 struct thread all_thread[MAX_THREAD];
 struct thread *current_thread;
@@ -81,7 +82,7 @@ thread_schedule(void)
      * Invoke thread_switch to switch from t to next_thread:
      * thread_switch(??, ??);
      */
-     thread_switch((uint64)&t->contex, (uint64)&current_thread->contex);
+    thread_switch((uint64)&t->contex, (uint64)&current_thread->contex);
   } else
     next_thread = 0;
 }
